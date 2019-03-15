@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ImagePickDemo</string>
+    <string name="title_activity_image_picker">ImagePickerActivity</string>
+</resources>
