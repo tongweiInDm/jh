@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tw.picker.ImagePickerActivity;
+import com.tw.picker.PickerActivity;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class DemoActivity extends AppCompatActivity {
         findViewById(R.id.btn_pick).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DemoActivity.this, ImagePickerActivity.class);
+                Intent intent = new Intent(DemoActivity.this, PickerActivity.class);
                 startActivityForResult(intent, REQ_CODE_PICK);
             }
         });
@@ -45,7 +45,7 @@ public class DemoActivity extends AppCompatActivity {
                 for (int i = 0;i < clipData.getItemCount();i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     Uri uri = item.getUri();
-                    builder.append(String.valueOf(uri));
+                    builder.append(String.valueOf(uri) + "\n");
                 }
                 pickResult = builder.toString();
             } else {
