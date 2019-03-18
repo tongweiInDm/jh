@@ -1,4 +1,4 @@
-package com.tw.imagepickdemo;
+package com.tw.demo;
 
 import android.content.ClipData;
 import android.content.Intent;
@@ -10,7 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tw.picker.PickerActivity;
+import com.tw.image.picker.PickerActivity;
+import com.tw.imagepickdemo.R;
 
 public class DemoActivity extends AppCompatActivity {
 

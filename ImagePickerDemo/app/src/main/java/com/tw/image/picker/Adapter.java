@@ -1,4 +1,4 @@
-package com.tw.picker;
+package com.tw.image.picker;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -12,6 +12,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tw.image.ImageItem;
+import com.tw.image.PickResult;
+import com.tw.image.utils.Utils;
 import com.tw.imagepickdemo.R;
 
 import java.util.ArrayList;
@@ -22,36 +25,30 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private static final int VIEW_TYPE_DIVIDER = 0;
     private static final int VIEW_TYPE_IMAGE = 1;
 
     private Activity mActivity;
     private LayoutInflater mLayoutInflater;
-    private UIEventListener mUIListener;
+    private UIEventHandler mUIEventHandler;
     private int mImageSize;
+
     private List<CellData> mCellData;
 
-    public RecycleViewAdapter(Activity activity) {
+    public Adapter(Activity activity) {
         mActivity = activity;
         mLayoutInflater = LayoutInflater.from(activity);
         mImageSize = Utils.getImageItemWidth(activity);
     }
 
-    public void setUIListener(UIEventListener listener) {
-        mUIListener = listener;
+    public void setUIEventHandler(UIEventHandler uiEventHandler) {
+        mUIEventHandler = uiEventHandler;
     }
 
     public void setData(List<CellData> cellData) {
         mCellData = cellData;
         notifyDataSetChanged();
-    }
-
-    private void onItemClicked(int position, boolean checked) {
-        ImageCellData imageCellData = (ImageCellData) mCellData.get(position);
-        if (mUIListener != null) {
-            mUIListener.onItemClicked(imageCellData.item, checked);
-        }
     }
 
     public int getSpanSize(int position) {
@@ -126,7 +123,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
     }
 
-    private class ImageViewHolder extends ViewHolder implements CompoundButton.OnCheckedChangeListener {
+    private class ImageViewHolder extends ViewHolder implements
+            CompoundButton.OnCheckedChangeListener, View.OnClickListener {
         ImageView imageView;
         View maskView;
         CheckBox checkBoxSelected;
@@ -150,19 +148,34 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             checkBoxSelected.setOnCheckedChangeListener(null);
             checkBoxSelected.setChecked(imageCellData.selected);
             checkBoxSelected.setOnCheckedChangeListener(this);
+            imageView.setOnClickListener(this);
         }
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             maskView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            onItemClicked(position, isChecked);
+            ImageCellData imageCellData = (ImageCellData) mCellData.get(position);
+            if (isChecked) {
+                if (!mUIEventHandler.onUserAddItem(imageCellData.item)) {
+                    //添加失败了，可能的原因，所选的文件数超过上限了
+                    checkBoxSelected.setChecked(false);
+                }
+            } else {
+                mUIEventHandler.onUserRemoveItem(imageCellData.item);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            ImageCellData imageCellData = (ImageCellData) mCellData.get(position);
+            mUIEventHandler.onImageItemClicked(imageCellData.item, position);
         }
     }
 
     private static final Comparator<ImageItem> sImageItemComparator = new Comparator<ImageItem>() {
         @Override
         public int compare(ImageItem o1, ImageItem o2) {
-            return (int) (o1.addTime - o2.addTime);
+            return (int) (o2.dateModify - o1.dateModify);
         }
     };
 
@@ -176,7 +189,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public static List<CellData> createCellData(List<ImageItem> imageItems, PickResult pickResult) {
         SortedMap<String, TreeSet<ImageItem>> dailyImageGroup = new TreeMap<>(sDateComparator);
         for (ImageItem imageItem : imageItems) {
-            String date = Utils.getDate(imageItem.addTime);
+            String date = Utils.getDate(imageItem.dateModify);
             TreeSet<ImageItem> itemSet = dailyImageGroup.get(date);
             if (itemSet == null) {
                 itemSet = new TreeSet<>(sImageItemComparator);
@@ -227,9 +240,5 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public int getType() {
             return VIEW_TYPE_IMAGE;
         }
-    }
-
-    public interface UIEventListener {
-        void onItemClicked(ImageItem imageItem, boolean checked);
     }
 }

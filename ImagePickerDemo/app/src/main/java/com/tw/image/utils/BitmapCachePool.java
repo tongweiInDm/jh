@@ -1,15 +1,13 @@
-package com.tw.picker.cache;
+package com.tw.image.utils;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.LruCache;
 
-import com.tw.picker.Utils;
-
 import java.lang.ref.SoftReference;
 
 public class BitmapCachePool {
-    private static final int MAX_POOL_SIZE = 3 * 1024 * 1024;
+    private static final int MAX_POOL_SIZE = 10 * 1024 * 1024;
 
     public static class HOLDER {
         public static final BitmapCachePool sInstance = new BitmapCachePool();

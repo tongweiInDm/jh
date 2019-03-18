@@ -1,4 +1,4 @@
-package com.tw.picker;
+package com.tw.image;
 
 import android.util.Log;
 
@@ -11,12 +11,23 @@ import java.util.List;
 public class PickResult {
     private static final String TAG = "ImagePickResult";
 
-    private final int mPickLimit;
+    public static class Holder {
+        public static final PickResult sInstance = new PickResult();
+    }
+
+    private int mPickLimit;
     private List<ImageItem> mResults = new ArrayList<>();
     private List<ChangeListener> mListeners = new ArrayList<>();
 
-    public PickResult(int pickLimit) {
-        mPickLimit = Math.max(pickLimit, 1);
+    private PickResult() {
+    }
+
+    public void setPickLimit(int pickLimit) {
+        mPickLimit = pickLimit;
+    }
+
+    public int getPickLimit() {
+        return mPickLimit;
     }
 
     public void registerListener(ChangeListener listener) {

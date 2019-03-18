@@ -1,12 +1,9 @@
-package com.tw.picker;
+package com.tw.image.utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.widget.ImageView;
-
-import com.tw.picker.cache.BitmapCachePool;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,10 +68,15 @@ public class Utils {
     }
 
     private static SimpleDateFormat sSimpleDateFormat;//用于将一个时间
+
+    /**
+     * @param timeStamp 以秒为单位
+     * @return
+     */
     public static String getDate(long timeStamp) {
         if (sSimpleDateFormat == null) {
             sSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         }
-        return sSimpleDateFormat.format(new Date(timeStamp));
+        return sSimpleDateFormat.format(new Date(timeStamp * 1000));
     }
 }

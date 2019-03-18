@@ -1,4 +1,4 @@
-package com.tw.picker;
+package com.tw.image;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ public class MediaStoreDataLoader {
     private static final int INDEX_WIDTH = 3;
     private static final int INDEX_HEIGHT = 4;
     private static final int INDEX_MIME_TYPE = 5;
-    private static final int INDEX_DATE_ADDED = 6;
+    private static final int INDEX_DATE_MODIFIED = 6;
 
     private final String[] IMAGE_PROJECTION = {     //查询图片需要的数据列
             MediaStore.Images.Media.DISPLAY_NAME,   //图片的显示名称  aaa.jpg
@@ -35,7 +35,7 @@ public class MediaStoreDataLoader {
             MediaStore.Images.Media.WIDTH,          //图片的宽度，int型  1920
             MediaStore.Images.Media.HEIGHT,         //图片的高度，int型  1080
             MediaStore.Images.Media.MIME_TYPE,      //图片的类型     image/jpeg
-            MediaStore.Images.Media.DATE_ADDED};    //图片被添加的时间，long型  1450518608
+            MediaStore.Images.Media.DATE_MODIFIED};    //图片最近一次被修改的时间，long型  1450518608
 
     private FragmentActivity mActivity;
     private LoaderManager mLoaderManager;
@@ -69,7 +69,7 @@ public class MediaStoreDataLoader {
     private Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(mActivity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 IMAGE_PROJECTION, null, null,
-                IMAGE_PROJECTION[INDEX_DATE_ADDED] + " DESC");
+                IMAGE_PROJECTION[INDEX_DATE_MODIFIED] + " DESC");
     }
 
     private void onLoadFinished(Loader<Cursor> loader, Cursor data, OnImagesLoadedListener listener) {
@@ -96,7 +96,7 @@ public class MediaStoreDataLoader {
             int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[INDEX_WIDTH]));
             int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[INDEX_HEIGHT]));
             String imageMimeType = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[INDEX_MIME_TYPE]));
-            long imageAddTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[INDEX_DATE_ADDED]));
+            long imageDateModify = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[INDEX_DATE_MODIFIED]));
             //封装实体
             ImageItem imageItem = new ImageItem();
             imageItem.name = imageName;
@@ -105,7 +105,7 @@ public class MediaStoreDataLoader {
             imageItem.width = imageWidth;
             imageItem.height = imageHeight;
             imageItem.mimeType = imageMimeType;
-            imageItem.addTime = imageAddTime;
+            imageItem.dateModify = imageDateModify;
             allImages.add(imageItem);
         }
 
@@ -117,8 +117,10 @@ public class MediaStoreDataLoader {
     }
 
     public void release() {
-        mLoaderManager.destroyLoader(IMAGE_LOADER_ID);
-        mLoaderManager = null;
+        if (mLoaderManager != null) {
+            mLoaderManager.destroyLoader(IMAGE_LOADER_ID);
+            mLoaderManager = null;
+        }
     }
 
     /**
