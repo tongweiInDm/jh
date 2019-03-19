@@ -13,6 +13,7 @@ import com.tw.image.MediaStoreDataLoader;
 import com.tw.image.PickResult;
 import com.tw.image.preview.PreviewActivity;
 import com.tw.image.utils.FileProvider;
+import com.tw.imagepickdemo.R;
 
 import java.io.File;
 import java.util.List;
@@ -32,6 +33,7 @@ public class Presenter {
     PickResult.ChangeListener mChangeListener;
 
     PickResult mPickResult;
+
     public Presenter(PickerActivity pickerActivity) {
         mActivity = pickerActivity;
         mAdapter = new Adapter(pickerActivity);
@@ -55,6 +57,11 @@ public class Presenter {
             public void onItemRemoved(ImageItem item) {
                 mPickResultChanged = true;
             }
+
+            @Override
+            public void onClear() {
+                mPickResultChanged = true;
+            }
         };
     }
 
@@ -64,13 +71,14 @@ public class Presenter {
             public void onOkBtnClicked() {
                 List<ImageItem> imageItems = mPickResult.get();
                 if (imageItems == null || imageItems.size() == 0) {
-                    Toast.makeText(mActivity, "至少选择一张图片", Toast.LENGTH_SHORT).show();
+                    String emptyResultTip = mActivity.getString(R.string.picker_activity_empty_result_tip);
+                    Toast.makeText(mActivity, emptyResultTip, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 File file = new File(imageItems.get(0).path);
                 Uri uri = FileProvider.getUriForFile(mActivity, file);
                 ClipData clipData = ClipData.newRawUri("", uri);
-                for (int i = 1;i < imageItems.size();i++) {
+                for (int i = 1; i < imageItems.size(); i++) {
                     ImageItem imageItem = imageItems.get(i);
                     file = new File(imageItem.path);
                     uri = FileProvider.getUriForFile(mActivity, file);
@@ -84,7 +92,8 @@ public class Presenter {
 
             @Override
             public void onImageItemClicked(ImageItem imageItem, int position) {
-                PreviewActivity.start(mActivity, mImageItems, mImageItems.indexOf(imageItem));
+                PreviewActivity.start(mActivity, PickerActivity.REQ_PREVIEW_CODE, mImageItems,
+                        mImageItems.indexOf(imageItem));
             }
 
             @Override

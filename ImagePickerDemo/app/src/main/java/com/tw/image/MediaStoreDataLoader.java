@@ -57,6 +57,7 @@ public class MediaStoreDataLoader {
                     @Override
                     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
                         MediaStoreDataLoader.this.onLoadFinished(loader, cursor, listener);
+                        mLoaderManager.destroyLoader(IMAGE_LOADER_ID);
                     }
 
                     @Override

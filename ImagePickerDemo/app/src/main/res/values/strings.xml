@@ -3,4 +3,10 @@
     <string name="title_activity_image_picker">ImagePickerActivity</string>
     <string name="preview_activity_check_box_selected">选择</string>
     <string name="preview_activity_ok">选好了</string>
+    <string name="picker_activity_today">今天</string>
+    <string name="picker_activity_yesterday">昨天</string>
+    <string name="picker_activity_day_before_yesterday">前天</string>
+    <string name="picker_activity_user_cancel">图片拾取被取消</string>
+    <string name="picker_activity_empty_result_tip">至少选择一张图片</string>
+    <string name="picker_activity_permission_tip">需要读取sd卡的权限</string>
 </resources>

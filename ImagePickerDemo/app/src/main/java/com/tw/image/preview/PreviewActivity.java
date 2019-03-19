@@ -1,5 +1,6 @@
 package com.tw.image.preview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +18,8 @@ public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
     private static final String EXTRA_INDEX = "index";
 
-    public static void start(Context context, List<ImageItem> imageItems, int currentItemIndex) {
+    public static void start(Activity activity, int reqCode, List<ImageItem> imageItems,
+                             int currentItemIndex) {
         if (imageItems == null) {
             Log.e(TAG, "Fail to start preview activity, imageItems is null.");
             return;
@@ -27,10 +29,11 @@ public class PreviewActivity extends AppCompatActivity {
             return;
         }
         sImageItemsHolder = new SoftReference<>(imageItems);
-        Intent intent = new Intent(context, PreviewActivity.class);
+        Intent intent = new Intent(activity, PreviewActivity.class);
         intent.putExtra(EXTRA_INDEX, currentItemIndex);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, reqCode);
     }
+
     private static SoftReference<List<ImageItem>> sImageItemsHolder;
 
     private Views mViews;

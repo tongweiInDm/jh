@@ -36,7 +36,9 @@ public class DemoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQ_CODE_PICK) {
             if (resultCode != RESULT_OK) {
-                Toast.makeText(DemoActivity.this, "", Toast.LENGTH_SHORT).show();
+                String cancelTip = getString(R.string.picker_activity_user_cancel);
+                Toast.makeText(DemoActivity.this, cancelTip, Toast.LENGTH_SHORT).show();
+                mTextViewPickResult.setText(cancelTip);
                 return;
             }
             String pickResult;
@@ -53,7 +55,6 @@ public class DemoActivity extends AppCompatActivity {
                 pickResult = "clipData not found.";
             }
             mTextViewPickResult.setText(pickResult);
-
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);

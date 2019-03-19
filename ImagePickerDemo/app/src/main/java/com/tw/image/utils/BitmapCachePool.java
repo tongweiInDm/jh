@@ -29,7 +29,9 @@ public class BitmapCachePool {
         BitmapHolder bitmapHolder = mBitmapCache.get(filePath);
         Bitmap bitmap = bitmapHolder == null ? null : bitmapHolder.bitmapRef.get();
         if (bitmap == null) {
-            //FIXME:针对同一个任务可能出现重复投放的问题,在整个流程跑通之前暂时不管整个问题
+            //FIXME:
+            // 针对同一个任务可能出现重复投放的问题,如果解决这个问题,需要针对每个正在加载的任务创建一个Task对象,
+            // 投放加载任务的时候,如果Task对象已经存在,则直接在这个已存在的Task对象上注册加载完成的监听
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(Void... voids) {

@@ -90,11 +90,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return mCellData == null ? 0 : mCellData.size();
     }
 
-    @Override
-    public void onViewRecycled(@NonNull ViewHolder holder) {
-        //TODO:主动清理view使用的Bitmap
-    }
-
     public static abstract class ViewHolder extends RecyclerView.ViewHolder {
         int position;
 
@@ -119,7 +114,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         public void bind(CellData cellData, int position) {
             super.bind(cellData, position);
             DividerCellData dividerCellData = (DividerCellData) cellData;
-            textViewTitle.setText(dividerCellData.getDisplayName());
+            textViewTitle.setText(dividerCellData.title);
         }
     }
 
@@ -201,12 +196,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         List<CellData> cellDataList = new ArrayList<>();
         for (Map.Entry<String, TreeSet<ImageItem>> entry : dailyImageGroup.entrySet()) {
             DividerCellData dividerCellData = new DividerCellData();
-            dividerCellData.name = entry.getKey();
+            dividerCellData.title = entry.getKey();
             cellDataList.add(dividerCellData);
             TreeSet<ImageItem> imageItemList = entry.getValue();
             for (ImageItem imageItem : imageItemList) {
                 ImageCellData imageCellData = new ImageCellData();
                 imageCellData.item = imageItem;
+                imageCellData.selected = pickResult.contain(imageItem);
                 cellDataList.add(imageCellData);
             }
         }
@@ -219,16 +215,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     public static class DividerCellData extends CellData {
-        String name;
+        String title;
 
         @Override
         public int getType() {
             return VIEW_TYPE_DIVIDER;
-        }
-
-        public String getDisplayName() {
-            //TODO:需要把当天的日期转成今天，昨天的日期转成昨天，其他日期不变
-            return name;
         }
     }
 

@@ -74,6 +74,11 @@ public class PickResult {
         return new ArrayList<>(mResults);
     }
 
+    public void clear() {
+        mResults.clear();
+        notifyClear();
+    }
+
     private void notifyItemAdded(ImageItem item) {
         for (ChangeListener listener : mListeners) {
             if (listener != null) {
@@ -90,8 +95,17 @@ public class PickResult {
         }
     }
 
+    private void notifyClear() {
+        for (ChangeListener listener : mListeners) {
+            if (listener != null) {
+                listener.onClear();
+            }
+        }
+    }
+
     public interface ChangeListener {
         void onItemAdded(ImageItem item);
         void onItemRemoved(ImageItem item);
+        void onClear();
     }
 }
