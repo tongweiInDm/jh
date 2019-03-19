@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:text="today"/>
 
-    <Button
+    <CheckBox
         android:id="@+id/btn_selected_group"
-        android:visibility="gone"
+        android:paddingRight="10dp"
         android:layout_gravity="right|center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="selected all"/>
+        android:text="@string/picker_activity_divide_item_select_all"/>
 
 </FrameLayout>

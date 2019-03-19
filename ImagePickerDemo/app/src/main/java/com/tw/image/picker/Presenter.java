@@ -16,6 +16,7 @@ import com.tw.image.utils.FileProvider;
 import com.tw.imagepickdemo.R;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,6 +95,32 @@ public class Presenter {
             public void onImageItemClicked(ImageItem imageItem, int position) {
                 PreviewActivity.start(mActivity, PickerActivity.REQ_PREVIEW_CODE, mImageItems,
                         mImageItems.indexOf(imageItem));
+            }
+
+            @Override
+            public List<Adapter.ImageCellData> onUserAddItemList(List<Adapter.ImageCellData> cellDataList) {
+                List<Adapter.ImageCellData> result = new ArrayList<>();
+                if (cellDataList != null) {
+                    for (Adapter.ImageCellData cellData : cellDataList) {
+                        if (onUserAddItem(cellData.item)) {
+                            result.add(cellData);
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                return result;
+            }
+
+            @Override
+            public boolean onUserRemoveItemList(List<Adapter.ImageCellData> cellDataList) {
+                if (cellDataList != null) {
+                    for (Adapter.ImageCellData cellData : cellDataList) {
+                        onUserRemoveItem(cellData.item);
+                    }
+                    return true;
+                }
+                return false;
             }
 
             @Override

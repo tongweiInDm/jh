@@ -9,4 +9,7 @@
     <string name="picker_activity_user_cancel">图片拾取被取消</string>
     <string name="picker_activity_empty_result_tip">至少选择一张图片</string>
     <string name="picker_activity_permission_tip">需要读取sd卡的权限</string>
+    <string name="picker_activity_divide_item_select_all">全选</string>
+    <string name="picker_activity_divide_item_unselect_all">全不选</string>
+    <string name="picker_activity_select_limit_exhausted">达到了选取上限</string>
 </resources>
